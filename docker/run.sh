@@ -52,7 +52,7 @@ check_ip "$PRIVATE_IP" || PRIVATE_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([
 check_ip "$PRIVATE_IP" || exiterr "Cannot find valid private IP."
 
 # Create IPsec (Libreswan) config
-if [ ! -f cat > /etc/ipsec.conf ]; then
+if [ ! -f /etc/ipsec.conf ]; then
 cat > /etc/ipsec.conf <<EOF
 version 2.0
 
@@ -112,7 +112,7 @@ fi
 
 
 # Specify IPsec PSK
-if [ ! -f cat > /etc/ipsec.secrets ]; then
+if [ ! -f /etc/ipsec.secrets ]; then
 cat > /etc/ipsec.secrets <<EOF
 $PUBLIC_IP  %any  : PSK "$VPN_IPSEC_PSK"
 EOF
