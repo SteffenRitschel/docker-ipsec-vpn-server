@@ -20,8 +20,9 @@ docker run \
     -v "$PWD/etc/ppp/chap-secrets:/etc/ppp/chap-secrets" \
     -v "$PWD/etc/ipsec.d/passwd:/etc/ipsec.d/passwd" \
     -v "$PWD/etc/ipsec.secrets:/etc/ipsec.secrets" \
+    -v "/etc/ipsec.conf:/etc/ipsec.conf" \
     $EXTRA_ARGS \
     -v /lib/modules:/lib/modules:ro \
     -d --privileged \
     --restart=always \
-    mobilejazz/docker-ipsec-vpn-server
+    strandsalz/docker-ipsec-vpn-server
