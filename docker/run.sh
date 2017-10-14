@@ -52,7 +52,7 @@ check_ip "$PRIVATE_IP" || PRIVATE_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([
 check_ip "$PRIVATE_IP" || exiterr "Cannot find valid private IP."
 
 # Create IPsec (Libreswan) config
-if [ ! -f /etc/ipsec.conf ]; then
+if [ ! -s /etc/ipsec.conf ]; then
 cat > /etc/ipsec.conf <<EOF
 version 2.0
 
@@ -112,13 +112,14 @@ fi
 
 
 # Specify IPsec PSK
-if [ ! -f /etc/ipsec.secrets ]; then
+if [ ! -s /etc/ipsec.secrets ]; then
 cat > /etc/ipsec.secrets <<EOF
 $PUBLIC_IP  %any  : PSK "$VPN_IPSEC_PSK"
 EOF
 fi
 
 # Create xl2tpd config
+if [ ! -s /etc/xl2tpd/xl2tpd.conf ]; then
 cat > /etc/xl2tpd/xl2tpd.conf <<'EOF'
 [global]
 port = 1701
@@ -133,8 +134,10 @@ name = l2tpd
 pppoptfile = /etc/ppp/options.xl2tpd
 length bit = yes
 EOF
+fi
 
 # Set xl2tpd options
+if [ ! -s /etc/ppp/options.xl2tpd ]; then
 cat > /etc/ppp/options.xl2tpd <<'EOF'
 ipcp-accept-local
 ipcp-accept-remote
@@ -151,6 +154,7 @@ lcp-echo-failure 4
 lcp-echo-interval 30
 connect-delay 5000
 EOF
+fi
 
 # Update sysctl settings
 SYST='/sbin/sysctl -e -q -w'
